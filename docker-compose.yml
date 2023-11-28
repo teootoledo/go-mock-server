@@ -1,0 +1,16 @@
+version: "3.9"
+
+networks:
+  mock-server-net:
+    driver: bridge
+
+services:
+  api:
+    container_name: mock-server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - mock-server-net

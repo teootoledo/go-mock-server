@@ -1,0 +1,84 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API for mocking responses",
+        "title": "Mock Server API",
+        "contact": {
+            "name": "Teo Martin Toledo",
+            "email": "teootoledo@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/v1",
+    "paths": {
+        "/mock": {
+            "post": {
+                "description": "Set mock response",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "mock"
+                ],
+                "summary": "Set mock response",
+                "parameters": [
+                    {
+                        "description": "Mock creation details",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/resources.CreateMockRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Mock response set successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid JSON",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "resources.CreateMockRequest": {
+            "type": "object",
+            "required": [
+                "endpoint",
+                "method",
+                "status-code"
+            ],
+            "properties": {
+                "endpoint": {
+                    "type": "string",
+                    "example": "/api/example"
+                },
+                "method": {
+                    "type": "string",
+                    "example": "POST"
+                },
+                "payload": {
+                    "type": "string",
+                    "example": "{\"example\":\"example\"}"
+                },
+                "status-code": {
+                    "type": "integer",
+                    "example": 200
+                }
+            }
+        }
+    }
+}

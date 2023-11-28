@@ -1,0 +1,57 @@
+basePath: /v1
+definitions:
+  resources.CreateMockRequest:
+    properties:
+      endpoint:
+        example: /api/example
+        type: string
+      method:
+        example: POST
+        type: string
+      payload:
+        example: '{"example":"example"}'
+        type: string
+      status-code:
+        example: 200
+        type: integer
+    required:
+    - endpoint
+    - method
+    - status-code
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: teootoledo@gmail.com
+    name: Teo Martin Toledo
+  description: API for mocking responses
+  title: Mock Server API
+  version: 1.0.0
+paths:
+  /mock:
+    post:
+      consumes:
+      - application/json
+      description: Set mock response
+      parameters:
+      - description: Mock creation details
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/resources.CreateMockRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Mock response set successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid JSON
+          schema:
+            type: string
+      summary: Set mock response
+      tags:
+      - mock
+swagger: "2.0"
