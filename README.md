@@ -1,4 +1,6 @@
 # Mock Server
+[![Go](https://github.com/teootoledo/go-mock-server/actions/workflows/go.yml/badge.svg)](https://github.com/teootoledo/go-mock-server/actions/workflows/go.yml)
+
 ## Description
 This is a mock server that can be used to mock responses from a real server.
 Sometimes the real service and credentials are not available yet, so to test certain flows this is a good alternative.
