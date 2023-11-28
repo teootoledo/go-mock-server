@@ -50,6 +50,20 @@ func (suite *MockControllerSuite) TestSetMockResponse() {
 			assert:             controller.AssertSuccess,
 		},
 		{
+			testName: "Mock response is set successfully even without beginning slash",
+			mockRequest: resources.CreateMockRequest{
+				Endpoint:   "health",
+				Method:     "POST",
+				Payload:    "{\"status\": \"ok\"}",
+				StatusCode: 200,
+			},
+			expectedResponse: resources.MockCreatedResponse{
+				Message: "Mock response created successfully",
+			},
+			expectedStatusCode: http.StatusOK,
+			assert:             controller.AssertSuccess,
+		},
+		{
 			testName: "Mock response is set successfully without payload",
 			mockRequest: resources.CreateMockRequest{
 				Endpoint:   "/health",

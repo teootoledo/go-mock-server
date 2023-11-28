@@ -15,3 +15,13 @@ type Mock struct {
 	Payload    string `json:"payload" example:"{\"example\":\"example\"}"`
 	StatusCode int    `json:"status-code" example:"200"`
 }
+
+type MockStorage struct {
+	Storage map[string]Mock
+}
+
+func NewMockStorage() *MockStorage {
+	return &MockStorage{
+		Storage: make(map[string]Mock),
+	}
+}

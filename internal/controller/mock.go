@@ -1,7 +1,9 @@
 package controller
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"mock-server/internal/constants"
 	"mock-server/internal/external/resources"
@@ -9,7 +11,8 @@ import (
 	"net/http"
 )
 
-var responseMap = make(map[string]map[string]resources.Mock)
+var storage = resources.NewMockStorage()
+
 var bannedEndpoints = []string{
 	"/v1/mock",
 	"/v1/docs",
@@ -49,14 +52,14 @@ func (mc *mockController) SetMockResponse(ctx *gin.Context) {
 		return
 	}
 
-	if _, exists := responseMap[request.Endpoint]; !exists {
-		responseMap[request.Endpoint] = make(map[string]resources.Mock)
+	if request.Endpoint[0] != '/' {
+		request.Endpoint = "/" + request.Endpoint
 	}
 
-	responseMap[request.Endpoint][request.Method] = resources.Mock{
+	mc.addMock(request.Endpoint, request.Method, resources.Mock{
 		Payload:    request.Payload,
 		StatusCode: request.StatusCode,
-	}
+	})
 
 	ctx.JSON(http.StatusOK, resources.MockCreatedResponse{
 		Message: "Mock response set successfully",
@@ -76,10 +79,9 @@ func (mc *mockController) NotFound(ctx *gin.Context) {
 	endpoint := ctx.Request.URL.Path
 	method := ctx.Request.Method
 
-	// Check if the endpoint exists in the response map
-	if response, isInMap := responseMap[endpoint][method]; isInMap {
-		// If the endpoint exists, return the response
-		ctx.JSON(response.StatusCode, response.Payload)
+	// Searching for mocks
+	if foundMock, ok := mc.findMock(endpoint, method); ok {
+		ctx.JSON(foundMock.StatusCode, json.RawMessage(foundMock.Payload))
 	} else {
 		// If the endpoint does not exist, return a 404
 		mc.logger.Error(ctx, "error in MockController#NotFound: mock not found for the given endpoint and method", nil)
@@ -104,6 +106,21 @@ func (mc *mockController) evaluateCreateMockRequest(request resources.CreateMock
 	}
 
 	return nil
+}
+
+// MOCK STORAGE ===================================================================================
+
+// addMock - adds a mock to the mock storage
+func (mc *mockController) addMock(endpoint, method string, mock resources.Mock) {
+	key := fmt.Sprintf("%s:%s", endpoint, method)
+	storage.Storage[key] = mock
+}
+
+// findMock - finds a mock in the mock storage
+func (mc *mockController) findMock(endpoint, method string) (resources.Mock, bool) {
+	key := fmt.Sprintf("%s:%s", endpoint, method)
+	mock, ok := storage.Storage[key]
+	return mock, ok
 }
 
 // NewMock - returns a new mock controller
