@@ -3,7 +3,7 @@ package constants
 const (
 
 	// Server constants
-	ServerPort = 8080
+	ServerPort = 8090
 
 	// Logger constants
 	RequestID       = "request_id"

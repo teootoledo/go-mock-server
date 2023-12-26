@@ -10,7 +10,7 @@ type Configuration struct {
 
 const (
 	ServerPort              = "SERVER_PORT"
-	DefaultServerPort       = "8080"
+	DefaultServerPort       = "8090"
 	ExecutionMode           = "EXECUTION_MODE"
 	DefaultExecutionMode    = "default"
 	LocalEnvironment        = "LOCAL_ENVIRONMENT"
